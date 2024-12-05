@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,18 +10,18 @@
             color: #ecf0f1;
             font-family: "Courier New", Courier, monospace;
             text-align: center;
+            line-height: 1.6;
             margin: 0;
-            padding: 0;
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
             height: 100vh;
             overflow: hidden;
         }
 
         h1 {
-            font-size: 5vw; /* 根据屏幕宽度调整字体大小 */
+            font-size: 5vw; /* 使用视口宽度，字体大小自适应屏幕宽度 */
             color: #e74c3c;
             text-shadow: 0 0 10px #e74c3c;
             margin-bottom: 20px;
@@ -34,6 +34,7 @@
             text-fill-color: transparent;
             animation: glow 1.5s infinite alternate ease-in-out;
         }
+        
 
         @keyframes glow {
             0% {
@@ -45,25 +46,22 @@
         }
 
         pre {
-            font-size: 3vw; /* 缩小字体，避免手机上溢出 */
-            white-space: pre-wrap; /* 自动换行 */
+            font-size: 1.5em;
+            white-space: pre-wrap;
             word-wrap: break-word;
             margin: 0;
             padding: 20px;
             background-color: #34495e;
             border: 2px solid #3498db;
-            max-width: 90%; /* 限制最大宽度，避免溢出 */
+            max-width: 100%;
+            overflow-x: auto;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             text-align: left;
             line-height: 1.4em;
             word-break: break-word;
             border-radius: 10px;
             color: #ecf0f1;
-            margin-top: 20px;
-            overflow: hidden;
-            max-height: 70vh; /* 限制最大高度，避免在手机屏幕上过长 */
-            display: block;
-            text-align: center;
+            animation: glow-art 2s infinite alternate ease-in-out, color-change 5s infinite alternate ease-in-out;
         }
 
         @keyframes glow-art {
@@ -95,18 +93,19 @@
 
         @media screen and (max-width: 768px) {
             h1 {
-                font-size: 8vw; /* 在小屏幕上进一步减小标题字体 */
+                font-size: 2em;
             }
             pre {
-                font-size: 4vw; /* 手机屏幕上减小 ASCII 艺术的字体 */
-                padding: 15px;
+                font-size: 1em;
+                padding: 10px;
             }
         }
     </style>
 </head>
 <body>
+<div>
     <h1>祈求区</h1>
-    <pre>
+    <pre id="ascii-art">
                      _ooOoo_
                     o8888888o
                     88" . "88
@@ -130,5 +129,35 @@
            佛祖保佑             逢考必过
            考的都会             蒙的都对
     </pre>
+</div>
+
+<script>
+    window.onload = function () {
+        adjustArtSize();
+    };
+
+    window.onresize = function () {
+        adjustArtSize();
+    };
+
+    function adjustArtSize() {
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+        var art = document.getElementById("ascii-art");
+        var fontSize = Math.min(width, height) / 30;
+        var maxWidth = width * 0.8;
+        var maxHeight = height * 0.8;
+        art.style.fontSize = fontSize + "px";
+        var artWidth = art.offsetWidth;
+        var artHeight = art.offsetHeight;
+        if (artWidth > maxWidth) {
+            fontSize = fontSize * (maxWidth / artWidth);
+        }
+        if (artHeight > maxHeight) {
+            fontSize = fontSize * (maxHeight / artHeight);
+        }
+        art.style.fontSize = fontSize + "px";
+    }
+</script>
 </body>
 </html>
