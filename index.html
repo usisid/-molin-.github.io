@@ -106,7 +106,7 @@
 </head>
 <body>
     <h1>祈求区</h1>
-    <pre id="ascii-art">
+    <pre>
                      _ooOoo_
                     o8888888o
                     88" . "88
@@ -130,30 +130,5 @@
            佛祖保佑             逢考必过
            考的都会             蒙的都对
     </pre>
-
-    <script>
-        window.onload = function() {
-            adjustArtSize();
-        };
-
-        window.onresize = function() {
-            adjustArtSize();
-        };
-
-        function adjustArtSize() {
-            const art = document.getElementById("ascii-art");
-            const bodyWidth = window.innerWidth;
-            const bodyHeight = window.innerHeight;
-
-            let fontSize = Math.min(bodyWidth, bodyHeight) / 20; // 初步计算字体大小
-            art.style.fontSize = fontSize + "px";
-
-            // 如果内容溢出，减少字体大小
-            while (art.scrollHeight > bodyHeight * 0.7 || art.scrollWidth > bodyWidth * 0.9) {
-                fontSize *= 0.9;  // 缩小字体
-                art.style.fontSize = fontSize + "px";
-            }
-        }
-    </script>
 </body>
 </html>
