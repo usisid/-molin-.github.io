@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,18 +10,18 @@
             color: #ecf0f1;
             font-family: "Courier New", Courier, monospace;
             text-align: center;
-            line-height: 1.6;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column; /* 垂直方向排列 */
             height: 100vh;
             overflow: hidden;
         }
 
         h1 {
-            font-size: 5vw; /* 使用视口宽度，字体大小自适应屏幕宽度 */
+            font-size: 5vw; /* 动态调整字体大小 */
             color: #e74c3c;
             text-shadow: 0 0 10px #e74c3c;
             margin-bottom: 20px;
@@ -34,7 +34,6 @@
             text-fill-color: transparent;
             animation: glow 1.5s infinite alternate ease-in-out;
         }
-        
 
         @keyframes glow {
             0% {
@@ -46,8 +45,8 @@
         }
 
         pre {
-            font-size: 1.5em;
-            white-space: pre-wrap;
+            font-size: 4vw; /* 根据屏幕宽度动态调整字体大小 */
+            white-space: pre-wrap; /* 允许换行 */
             word-wrap: break-word;
             margin: 0;
             padding: 20px;
@@ -61,7 +60,7 @@
             word-break: break-word;
             border-radius: 10px;
             color: #ecf0f1;
-            animation: glow-art 2s infinite alternate ease-in-out, color-change 5s infinite alternate ease-in-out;
+            animation: glow-art 2s infinite alternate, color-change 5s infinite alternate;
         }
 
         @keyframes glow-art {
@@ -93,19 +92,18 @@
 
         @media screen and (max-width: 768px) {
             h1 {
-                font-size: 2em;
+                font-size: 8vw; /* 小屏幕时标题字体稍微更大 */
             }
             pre {
-                font-size: 1em;
-                padding: 10px;
+                font-size: 5vw; /* 小屏幕上调整 ASCII 字体大小 */
+                padding: 10px; /* 减少预留间距 */
             }
         }
     </style>
 </head>
 <body>
-<div>
     <h1>祈求区</h1>
-    <pre id="ascii-art">
+    <pre>
                      _ooOoo_
                     o8888888o
                     88" . "88
@@ -129,35 +127,5 @@
            佛祖保佑             逢考必过
            考的都会             蒙的都对
     </pre>
-</div>
-
-<script>
-    window.onload = function () {
-        adjustArtSize();
-    };
-
-    window.onresize = function () {
-        adjustArtSize();
-    };
-
-    function adjustArtSize() {
-        var width = window.innerWidth;
-        var height = window.innerHeight;
-        var art = document.getElementById("ascii-art");
-        var fontSize = Math.min(width, height) / 30;
-        var maxWidth = width * 0.8;
-        var maxHeight = height * 0.8;
-        art.style.fontSize = fontSize + "px";
-        var artWidth = art.offsetWidth;
-        var artHeight = art.offsetHeight;
-        if (artWidth > maxWidth) {
-            fontSize = fontSize * (maxWidth / artWidth);
-        }
-        if (artHeight > maxHeight) {
-            fontSize = fontSize * (maxHeight / artHeight);
-        }
-        art.style.fontSize = fontSize + "px";
-    }
-</script>
 </body>
 </html>
