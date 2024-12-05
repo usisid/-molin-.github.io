@@ -21,7 +21,7 @@
         }
 
         h1 {
-            font-size: 5vw;
+            font-size: 5vw; /* 根据屏幕宽度调整字体大小 */
             color: #e74c3c;
             text-shadow: 0 0 10px #e74c3c;
             margin-bottom: 20px;
@@ -45,7 +45,7 @@
         }
 
         pre {
-            font-size: 4vw; /* 根据屏幕宽度动态调整字体大小 */
+            font-size: 3vw; /* 缩小字体，避免手机上溢出 */
             white-space: pre-wrap; /* 自动换行 */
             word-wrap: break-word;
             margin: 0;
@@ -60,6 +60,10 @@
             border-radius: 10px;
             color: #ecf0f1;
             margin-top: 20px;
+            overflow: hidden;
+            max-height: 70vh; /* 限制最大高度，避免在手机屏幕上过长 */
+            display: block;
+            text-align: center;
         }
 
         @keyframes glow-art {
@@ -91,10 +95,10 @@
 
         @media screen and (max-width: 768px) {
             h1 {
-                font-size: 8vw; /* 更适应小屏幕的标题字体 */
+                font-size: 8vw; /* 在小屏幕上进一步减小标题字体 */
             }
             pre {
-                font-size: 6vw; /* 小屏幕上调整 ASCII 字体大小 */
+                font-size: 4vw; /* 手机屏幕上减小 ASCII 艺术的字体 */
                 padding: 15px;
             }
         }
