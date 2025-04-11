@@ -1,161 +1,150 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>祈求区</title>
+    <title>给你的至臻爱心</title>
     <style>
         body {
-            background-color: #2c3e50;
-            color: #ecf0f1;
-            font-family: "Courier New", Courier, monospace;
-            text-align: center;
-            line-height: 1.6;
             margin: 0;
-            padding: 20px;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            background: #000;
             overflow: hidden;
+            font-family: 'Arial', sans-serif;
         }
-
-        h1 {
-            color: #e74c3c;
-            text-shadow: 0 0 10px #e74c3c;
-            margin-bottom: 20px;
-            font-size: 2.5em;
-            background: linear-gradient(#e74c3c, #f39c12);
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+        .container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+        .heart {
+            width: 120px;
+            height: 110px;
+            position: relative;
+            animation: beat 1.5s infinite, rotate 10s infinite linear;
+            cursor: pointer;
+        }
+        .heart::before,
+        .heart::after {
+            content: "";
+            width: 80px;
+            height: 130px;
+            background: linear-gradient(45deg, #ff4d4d, #ff99cc);
+            border-radius: 60px 60px 0 0;
+            position: absolute;
+            box-shadow: 0 0 20px rgba(255, 77, 77, 0.8);
+        }
+        .heart::before {
+            left: 60px;
+            transform: rotate(-45deg);
+            transform-origin: 0 100%;
+        }
+        .heart::after {
+            left: 0;
+            transform: rotate(45deg);
+            transform-origin: 100% 100%;
+        }
+        @keyframes beat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        @keyframes rotate {
+            100% { transform: rotateY(360deg); }
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 28px;
+            color: #fff;
+            background: linear-gradient(to right, #ff4d4d, #ff99cc);
             -webkit-background-clip: text;
-            -moz-background-clip: text;
-            background-clip: text;
             -webkit-text-fill-color: transparent;
-            -moz-text-fill-color: transparent;
-            animation: glow 1.5s infinite alternate;
+            opacity: 0;
+            transition: opacity 1s;
         }
-
-        @keyframes glow {
-            0% {
-                text-shadow: 0 0 5px #e74c3c, 0 0 10px #e74c3c, 0 0 15px #f39c12;
-            }
-            100% {
-                text-shadow: 0 0 20px #e74c3c, 0 0 30px #f39c12, 0 0 40px #f39c12;
-            }
-        }
-
-        pre {
-            font-size: 1.5em;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            margin: 0;
-            padding: 20px;
-            background-color: #34495e;
-            border: 2px solid #3498db;
-            max-width: 100%;
-            overflow-x: auto;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            text-align: left;
-            line-height: 1.4em;
-            word-break: break-word;
-            border-radius: 10px;
-            color: #ecf0f1;
-            animation: glow-art 2s infinite alternate, color-change 5s infinite alternate;
-        }
-
-        @keyframes glow-art {
-            0% {
-                text-shadow: 0 0 5px #e74c3c, 0 0 10px #e74c3c, 0 0 20px #f39c12;
-            }
-            100% {
-                text-shadow: 0 0 15px #e74c3c, 0 0 25px #f39c12, 0 0 40px #f39c12;
-            }
-        }
-
-        @keyframes color-change {
-            0% {
-                color: #e74c3c;
-            }
-            25% {
-                color: #f39c12;
-            }
-            50% {
-                color: #2ecc71;
-            }
-            75% {
-                color: #3498db;
-            }
-            100% {
-                color: #9b59b6;
-            }
-        }
-
-        @media screen and (max-width: 768px) {
-            h1 {
-                font-size: 2em;
-            }
-            pre {
-                font-size: 1em;
-                padding: 10px;
-            }
+        .message.show {
+            opacity: 1;
         }
     </style>
 </head>
 <body>
-<div>
-    <h1>祈求区</h1>
-    <pre id="ascii-art">
-                     _ooOoo_
-                    o8888888o
-                    88" . "88
-                    (| -_- |)
-                     O\ = /O
-                 ____/`---'\____
-               .   ' \\| |// `.
-                / \\||| : |||// \
-              / _||||| -:- |||||- \
-                | | \\\ - /// | |
-              | \_| ''\---/'' | |
-               \ .-\__ `-` ___/-. /
-            ___`. .' /--.--\ `. . __
-         ."" '< `.___\_<|>_/___.' >'"".
-        | | : `- \`.;`\ _ /`;.`/ - ` : | |
-          \ \ `-. \_ __\ /__ _/ .-` / /
-  ======`-.____`-.___\_____/___.-`____.-'======
-                     `=---='
+    <canvas id="canvas"></canvas>
+    <div class="container">
+        <div class="heart" onclick="fetchQuote()"></div>
+        <div class="message" id="message">点击爱心获取一句情话</div>
+    </div>
+    <audio id="bgm" loop>
+        <source src="https://www.kozco.com/tech/piano2.mp3" type="audio/mpeg">
+    </audio>
 
-  .............................................
-           佛祖保佑             逢考必过
-           考的都会             蒙的都对
-    </pre>
-</div>
+    <script>
+        // 粒子背景
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
-<script>
-    window.onload = function () {
-        adjustArtSize();
-    };
-
-    window.onresize = function () {
-        adjustArtSize();
-    };
-
-    function adjustArtSize() {
-        var width = window.innerWidth;
-        var height = window.innerHeight;
-        var art = document.getElementById("ascii-art");
-        var fontSize = Math.min(width, height) / 30;
-        var maxWidth = width * 0.8;
-        var maxHeight = height * 0.8;
-        art.style.fontSize = fontSize + "px";
-        var artWidth = art.offsetWidth;
-        var artHeight = art.offsetHeight;
-        if (artWidth > maxWidth) {
-            fontSize = fontSize * (maxWidth / artWidth);
+        let particles = [];
+        function createParticle() {
+            return {
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 3 + 1,
+                speedX: Math.random() * 2 - 1,
+                speedY: Math.random() * 2 - 1,
+                color: `hsl(${Math.random() * 360}, 70%, 50%)`
+            };
         }
-        if (artHeight > maxHeight) {
-            fontSize = fontSize * (maxHeight / artHeight);
+
+        for (let i = 0; i < 100; i++) {
+            particles.push(createParticle());
         }
-        art.style.fontSize = fontSize + "px";
-    }
-</script>
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+
+                p.x += p.speedX;
+                p.y += p.speedY;
+
+                if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // 获取随机情话
+        function fetchQuote() {
+            fetch('https://api.quotable.io/random?tags=love')
+                .then(response => response.json())
+                .then(data => {
+                    const msg = document.getElementById('message');
+                    msg.textContent = data.content; // 显示 API 返回的句子
+                    msg.classList.add('show');
+                    const audio = document.getElementById('bgm');
+                    audio.play();
+                })
+                .catch(error => {
+                    console.error('获取情话失败:', error);
+                    document.getElementById('message').textContent = '爱你是我未来的唯一代码。';
+                    document.getElementById('message').classList.add('show');
+                });
+        }
+
+        // 页面加载时自动获取一次
+        fetchQuote();
+    </script>
 </body>
 </html>
