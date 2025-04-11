@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="A stunning romantic webpage for a competition, featuring a beautiful heart, love quotes, and immersive effects.">
     <meta name="keywords" content="romantic, heart, love quotes, competition, web design">
-    <meta name="author" content="Grok 3">
     <title>至臻爱心 - 极致比赛作品</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
@@ -16,7 +15,7 @@
             --background-start: #1a1a3d;
             --background-end: #0a0a1d;
             --text-shadow: 0 0 15px rgba(255, 77, 77, 0.7), 0 0 30px rgba(255, 99, 99, 0.5);
-            --heart-size: 120px;
+            --heart-size: 140px;
         }
 
         * {
@@ -57,6 +56,7 @@
             animation: beat 2s infinite ease-in-out, sway 4s infinite ease-in-out;
             cursor: pointer;
             transition: transform 0.3s ease;
+            z-index: 2;
         }
 
         .heart:hover {
@@ -81,10 +81,11 @@
 
         .heart-particles {
             position: absolute;
-            width: 100%;
-            height: 100%;
+            width: var(--heart-size);
+            height: var(--heart-size);
             top: 0;
             left: 0;
+            z-index: 2;
         }
 
         .heart-particle {
@@ -93,23 +94,30 @@
             height: 6px;
             background: var(--secondary-color);
             border-radius: 50%;
-            animation: orbit 6s infinite linear, particleGlow 2s infinite;
-            transform-origin: center center;
+            animation: orbit 6s infinite linear, particleGlow 2s infinite, particleScale 3s infinite;
+            top: 50%;
+            left: 50%;
+            transform-origin: 0 0;
+            box-shadow: 0 0 10px rgba(255, 99, 204, 0.5);
         }
 
-        /* 调整环绕路径，确保围绕爱心中心 */
         @keyframes orbit {
             0% {
-                transform: translate(calc(var(--heart-size) / 2), calc(var(--heart-size) / 2)) rotate(0deg) translateX(60px) rotate(0deg);
+                transform: translate(-50%, -50%) rotate(0deg) translateX(60px) rotate(0deg);
             }
             100% {
-                transform: translate(calc(var(--heart-size) / 2), calc(var(--heart-size) / 2)) rotate(360deg) translateX(60px) rotate(-360deg);
+                transform: translate(-50%, -50%) rotate(360deg) translateX(60px) rotate(-360deg);
             }
         }
 
         @keyframes particleGlow {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
+            0%, 100% { opacity: 0.5; box-shadow: 0 0 10px rgba(255, 99, 204, 0.5); }
+            50% { opacity: 1; box-shadow: 0 0 20px rgba(255, 99, 204, 0.8); }
+        }
+
+        @keyframes particleScale {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.5); }
         }
 
         @keyframes beat {
@@ -133,64 +141,22 @@
             text-shadow: var(--text-shadow);
             max-width: 90%;
             line-height: 1.4;
-            padding: 15px 30px;
-            border-radius: 15px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
             position: relative;
             animation: breathe 4s infinite ease-in-out;
             cursor: pointer;
             transition: transform 0.3s ease;
             white-space: normal;
             word-wrap: break-word;
+            z-index: 1;
         }
 
         .message:hover {
             transform: scale(1.05);
         }
 
-        .message::before {
-            content: '';
-            position: absolute;
-            top: -3px;
-            left: -3px;
-            right: -3px;
-            bottom: -3px;
-            border: 2px solid transparent;
-            border-radius: 18px;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)) border-box;
-            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: destination-out;
-            mask-composite: exclude;
-            animation: borderGlow 3s infinite;
-        }
-
-        .message.fade-in {
-            animation: fadeIn 1s ease-in forwards;
-        }
-
-        .message.fade-out {
-            animation: fadeOut 1s ease-out forwards;
-        }
-
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: scale(0.95); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-
-        @keyframes fadeOut {
-            0% { opacity: 1; transform: scale(1); }
-            100% { opacity: 0; transform: scale(0.95); }
-        }
-
         @keyframes breathe {
             0%, 100% { text-shadow: var(--text-shadow); }
             50% { text-shadow: 0 0 25px rgba(255, 77, 77, 0.9), 0 0 50px rgba(255, 99, 99, 0.7); }
-        }
-
-        @keyframes borderGlow {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
         }
 
         .text-particles {
@@ -200,6 +166,7 @@
             top: 0;
             left: 0;
             pointer-events: none;
+            z-index: 1;
         }
 
         .text-particle {
@@ -214,6 +181,30 @@
         @keyframes scatter {
             0% { opacity: 1; transform: translate(0, 0); }
             100% { opacity: 0; transform: translate(calc((var(--x) - 0.5) * 100px), calc((var(--y) - 0.5) * 100px)); }
+        }
+
+        .heart-explosion {
+            position: absolute;
+            width: var(--heart-size);
+            height: var(--heart-size);
+            top: 0;
+            left: 0;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        .explosion-particle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            animation: explode 1.5s ease-out forwards;
+        }
+
+        @keyframes explode {
+            0% { opacity: 1; transform: translate(0, 0); }
+            100% { opacity: 0; transform: translate(calc((var(--x) - 0.5) * 150px), calc((var(--y) - 0.5) * 150px)); }
         }
 
         .stars {
@@ -236,14 +227,95 @@
             animation: nebulaGlow 15s infinite;
         }
 
+        .star-cluster-large, .star-cluster-medium, .star-cluster-small {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .star-cluster-large::before, .star-cluster-medium::before, .star-cluster-small::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2), transparent 50%);
+            opacity: 0.5;
+            animation: twinkle 8s infinite;
+        }
+
+        .star-cluster-large::before {
+            background-size: 100px 100px;
+            top: 10%;
+            left: 20%;
+        }
+
+        .star-cluster-medium::before {
+            background-size: 50px 50px;
+            top: 50%;
+            left: 70%;
+            animation-delay: 2s;
+        }
+
+        .star-cluster-small::before {
+            background-size: 20px 20px;
+            top: 80%;
+            left: 30%;
+            animation-delay: 4s;
+        }
+
+        .star-trail {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: starTrail 20s infinite linear;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: sparkle 3s infinite;
+            z-index: 0;
+        }
+
+        .lens-flare {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(255, 99, 99, 0.2), transparent);
+            opacity: 0.3;
+            z-index: 0;
+            animation: lensFlare 10s infinite;
+        }
+
         @keyframes twinkle {
             0%, 100% { opacity: 0.4; }
-            50% { opacity: 0.6; }
+            50% { opacity: 0.8; }
         }
 
         @keyframes nebulaGlow {
             0%, 100% { opacity: 0.3; }
             50% { opacity: 0.5; }
+        }
+
+        @keyframes starTrail {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+
+        @keyframes lensFlare {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
         }
 
         .meteor {
@@ -262,11 +334,10 @@
 
         @media (max-width: 600px) {
             :root {
-                --heart-size: 100px;
+                --heart-size: 120px;
             }
             .message {
                 font-size: clamp(16px, 2.5vw, 24px);
-                padding: 10px 20px;
             }
         }
     </style>
@@ -274,11 +345,23 @@
 <body>
     <div class="stars"></div>
     <div class="nebula"></div>
+    <div class="star-cluster-large"></div>
+    <div class="star-cluster-medium"></div>
+    <div class="star-cluster-small"></div>
+    <div class="star-trail"></div>
+    <div class="sparkle" style="top: 20%; left: 30%; animation-delay: 0s;"></div>
+    <div class="sparkle" style="top: 40%; left: 60%; animation-delay: 1s;"></div>
+    <div class="sparkle" style="top: 70%; left: 20%; animation-delay: 2s;"></div>
+    <div class="sparkle" style="top: 50%; left: 80%; animation-delay: 3s;"></div>
+    <div class="lens-flare" style="top: 10%; left: 10%; animation-delay: 0s;"></div>
+    <div class="lens-flare" style="top: 60%; left: 80%; animation-delay: 5s;"></div>
     <div class="meteor" style="left: 10%; animation-delay: 0s;"></div>
-    <div class="meteor" style="left: 40%; animation-delay: 2s;"></div>
-    <div class="meteor" style="left: 70%; animation-delay: 4s;"></div>
+    <div class="meteor" style="left: 30%; animation-delay: 1s;"></div>
+    <div class="meteor" style="left: 50%; animation-delay: 2s;"></div>
+    <div class="meteor" style="left: 70%; animation-delay: 3s;"></div>
+    <div class="meteor" style="left: 90%; animation-delay: 4s;"></div>
     <div class="container">
-        <div class="heart" role="img" aria-label="Heart">
+        <div class="heart" id="heart" role="img" aria-label="Heart">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="url(#grad)" stroke="#ff4d4d" stroke-width="1"/>
                 <path d="M12 19.5l-1.2-1.1C6.5 14.5 4 12 4 8.5 4 6 5.5 4 8 4c1.5 0 2.8.7 3.5 1.8C12.2 4.7 13.5 4 15 4c2.5 0 4 2 4 4.5 0 3.5-2.5 6-6.8 9.9L12 19.5z" fill="url(#innerGrad)" opacity="0.6"/>
@@ -303,6 +386,7 @@
                 <div class="heart-particle" style="animation-delay: 4.5s;"></div>
                 <div class="heart-particle" style="animation-delay: 5.25s;"></div>
             </div>
+            <div class="heart-explosion" id="heart-explosion"></div>
         </div>
         <div class="message" id="message" role="button" aria-label="Love Quote" tabindex="0">
             <span id="message-text">加载中...</span>
@@ -365,39 +449,28 @@
         function updateMessage() {
             if (isAnimating) return;
             isAnimating = true;
-            const msg = document.getElementById('message');
             const msgText = document.getElementById('message-text');
             const particlesContainer = document.getElementById('text-particles');
 
-            // 淡出动画
-            msg.classList.remove('fade-in');
-            msg.classList.add('fade-out');
+            if (quoteList.length > 0) {
+                msgText.textContent = quoteList[currentIndex];
+                currentIndex = (currentIndex + 1) % quoteList.length;
 
-            setTimeout(() => {
-                if (quoteList.length > 0) {
-                    msgText.textContent = quoteList[currentIndex];
-                    currentIndex = (currentIndex + 1) % quoteList.length;
-
-                    // 创建粒子
-                    particlesContainer.innerHTML = '';
-                    for (let i = 0; i < 10; i++) {
-                        const particle = document.createElement('div');
-                        particle.classList.add('text-particle');
-                        particle.style.left = `${Math.random() * 100}%`;
-                        particle.style.top = `${Math.random() * 100}%`;
-                        particle.style.setProperty('--x', Math.random());
-                        particle.style.setProperty('--y', Math.random());
-                        particlesContainer.appendChild(particle);
-                    }
-
-                    // 淡入动画
-                    msg.classList.remove('fade-out');
-                    msg.classList.add('fade-in');
-                } else {
-                    msgText.textContent = "加载中...";
+                // 创建粒子
+                particlesContainer.innerHTML = '';
+                for (let i = 0; i < 15; i++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('text-particle');
+                    particle.style.left = `${Math.random() * 100}%`;
+                    particle.style.top = `${Math.random() * 100}%`;
+                    particle.style.setProperty('--x', Math.random());
+                    particle.style.setProperty('--y', Math.random());
+                    particlesContainer.appendChild(particle);
                 }
-                isAnimating = false;
-            }, 1000); // 等待淡出动画完成
+            } else {
+                msgText.textContent = "加载中...";
+            }
+            isAnimating = false;
         }
 
         function startInterval() {
@@ -439,6 +512,31 @@
 
         fetchQuote();
         startInterval();
+
+        // 爱心点击粒子爆炸
+        const heart = document.getElementById('heart');
+        heart.addEventListener('click', () => {
+            const explosionContainer = document.getElementById('heart-explosion');
+            explosionContainer.innerHTML = '';
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('explosion-particle');
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.setProperty('--x', Math.random());
+                particle.style.setProperty('--y', Math.random());
+                explosionContainer.appendChild(particle);
+            }
+        });
+
+        // 鼠标跟随微光
+        document.addEventListener('mousemove', (e) => {
+            const sparkle = document.createElement('div');
+            sparkle.classList.add('sparkle');
+            sparkle.style.left = `${e.clientX}px`;
+            sparkle.style.top = `${e.clientY}px`;
+            document.body.appendChild(sparkle);
+        });
 
         // 背景音乐
         window.addEventListener('load', () => {
