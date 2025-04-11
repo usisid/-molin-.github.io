@@ -123,9 +123,9 @@
     <div class="meteor" style="left: 80%; animation-delay: 4s;"></div>
     <div class="container">
         <div class="heart">
-            <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M100 180C110 170 120 160 130 150C140 140 150 130 160 120C170 110 180 100 180 90C180 80 170 70 160 60C150 50 140 40 130 30C120 20 110 10 100 0C90 10 80 20 70 30C60 40 50 50 40 60C30 70 20 80 20 90C20 100 30 110 40 120C50 130 60 140 70 150C80 160 90 170 100 180Z" fill="url(#grad)" stroke="#ff4d4d" stroke-width="4"/>
-                <path d="M100 160C108 152 116 144 124 136C132 128 140 120 148 112C156 104 164 96 164 88C164 80 156 72 148 64C140 56 132 48 124 40C116 32 108 24 100 16C92 24 84 32 76 40C68 48 60 56 52 64C44 72 36 80 36 88C36 96 44 104 52 112C60 120 68 128 76 136C84 144 92 152 100 160Z" fill="url(#innerGrad)" opacity="0.6"/>
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="url(#grad)" stroke="#ff4d4d" stroke-width="1"/>
+                <path d="M12 19.5l-1.2-1.1C6.5 14.5 4 12 4 8.5 4 6 5.5 4 8 4c1.5 0 2.8.7 3.5 1.8C12.2 4.7 13.5 4 15 4c2.5 0 4 2 4 4.5 0 3.5-2.5 6-6.8 9.9L12 19.5z" fill="url(#innerGrad)" opacity="0.6"/>
                 <defs>
                     <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" style="stop-color:#ff4d4d;stop-opacity:1" />
@@ -194,12 +194,13 @@
         // 情话轮播
         const quotes = [
             "你是我今生唯一的归宿。",
-            "爱你是我的未来唯一代码。",
             "在亿万星河中，我只为你闪烁。",
             "你是我心动的唯一频率。",
-            "未来的每一天，都想和你共享。"
+            "未来的每一天，都想和你共享。",
+            "爱你是我生命中最美的算法。"
         ]; // 备用情话
-        let currentQuote = "加载中...";
+        let quoteList = [];
+        let currentIndex = 0;
 
         // 获取情话
         function fetchQuote() {
@@ -213,22 +214,28 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data && data.data) {
-                        currentQuote = data.data;
+                        quoteList.push(data.data);
+                        updateMessage();
                     } else {
-                        currentQuote = quotes[Math.floor(Math.random() * quotes.length)];
+                        quoteList.push(quotes[Math.floor(Math.random() * quotes.length)]);
+                        updateMessage();
                     }
-                    updateMessage();
                 })
                 .catch(error => {
                     console.error('获取情话失败:', error);
-                    currentQuote = quotes[Math.floor(Math.random() * quotes.length)];
+                    quoteList.push(quotes[Math.floor(Math.random() * quotes.length)]);
                     updateMessage();
                 });
         }
 
         function updateMessage() {
             const msg = document.getElementById('message');
-            msg.textContent = currentQuote;
+            if (quoteList.length > 0) {
+                msg.textContent = quoteList[currentIndex];
+                currentIndex = (currentIndex + 1) % quoteList.length;
+            } else {
+                msg.textContent = "加载中...";
+            }
             msg.style.animation = 'none'; // 重置动画
             setTimeout(() => {
                 msg.style.animation = 'fade 5s infinite';
