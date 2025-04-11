@@ -16,7 +16,7 @@
             --background-start: #1a1a3d;
             --background-end: #0a0a1d;
             --text-shadow: 0 0 15px rgba(255, 77, 77, 0.7), 0 0 30px rgba(255, 99, 99, 0.5);
-            --heart-size: 120px; /* 缩小爱心尺寸 */
+            --heart-size: 120px;
         }
 
         * {
@@ -93,7 +93,23 @@
             height: 6px;
             background: var(--secondary-color);
             border-radius: 50%;
-            animation: orbit 6s infinite linear;
+            animation: orbit 6s infinite linear, particleGlow 2s infinite;
+            transform-origin: center center;
+        }
+
+        /* 调整环绕路径，确保围绕爱心中心 */
+        @keyframes orbit {
+            0% {
+                transform: translate(calc(var(--heart-size) / 2), calc(var(--heart-size) / 2)) rotate(0deg) translateX(60px) rotate(0deg);
+            }
+            100% {
+                transform: translate(calc(var(--heart-size) / 2), calc(var(--heart-size) / 2)) rotate(360deg) translateX(60px) rotate(-360deg);
+            }
+        }
+
+        @keyframes particleGlow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
         }
 
         @keyframes beat {
@@ -111,11 +127,6 @@
             50% { opacity: 0.6; }
         }
 
-        @keyframes orbit {
-            0% { transform: rotate(0deg) translateX(70px) rotate(0deg); }
-            100% { transform: rotate(360deg) translateX(70px) rotate(-360deg); }
-        }
-
         .message {
             font-size: clamp(20px, 3vw, 32px);
             color: #fff;
@@ -130,8 +141,8 @@
             animation: breathe 4s infinite ease-in-out;
             cursor: pointer;
             transition: transform 0.3s ease;
-            white-space: normal; /* 支持自动换行 */
-            word-wrap: break-word; /* 长文案自动换行 */
+            white-space: normal;
+            word-wrap: break-word;
         }
 
         .message:hover {
@@ -154,11 +165,22 @@
             animation: borderGlow 3s infinite;
         }
 
-        .message::after {
-            content: '|';
-            display: inline-block;
-            animation: blink 1s infinite step-end;
-            margin-left: 5px;
+        .message.fade-in {
+            animation: fadeIn 1s ease-in forwards;
+        }
+
+        .message.fade-out {
+            animation: fadeOut 1s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.95); }
         }
 
         @keyframes breathe {
@@ -171,9 +193,27 @@
             50% { opacity: 1; }
         }
 
-        @keyframes blink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0; }
+        .text-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .text-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--secondary-color);
+            border-radius: 50%;
+            animation: scatter 2s ease-out forwards;
+        }
+
+        @keyframes scatter {
+            0% { opacity: 1; transform: translate(0, 0); }
+            100% { opacity: 0; transform: translate(calc((var(--x) - 0.5) * 100px), calc((var(--y) - 0.5) * 100px)); }
         }
 
         .stars {
@@ -255,13 +295,19 @@
             </svg>
             <div class="heart-particles">
                 <div class="heart-particle" style="animation-delay: 0s;"></div>
-                <div class="heart-particle" style="animation-delay: 1s;"></div>
-                <div class="heart-particle" style="animation-delay: 2s;"></div>
+                <div class="heart-particle" style="animation-delay: 0.75s;"></div>
+                <div class="heart-particle" style="animation-delay: 1.5s;"></div>
+                <div class="heart-particle" style="animation-delay: 2.25s;"></div>
                 <div class="heart-particle" style="animation-delay: 3s;"></div>
-                <div class="heart-particle" style="animation-delay: 4s;"></div>
+                <div class="heart-particle" style="animation-delay: 3.75s;"></div>
+                <div class="heart-particle" style="animation-delay: 4.5s;"></div>
+                <div class="heart-particle" style="animation-delay: 5.25s;"></div>
             </div>
         </div>
-        <div class="message" id="message" role="button" aria-label="Love Quote" tabindex="0">加载中...</div>
+        <div class="message" id="message" role="button" aria-label="Love Quote" tabindex="0">
+            <span id="message-text">加载中...</span>
+            <div class="text-particles" id="text-particles"></div>
+        </div>
     </div>
     <audio id="bgm" loop>
         <source src="https://www.kozco.com/tech/piano2.mp3" type="audio/mpeg">
@@ -273,7 +319,7 @@
         let currentIndex = 0;
         let intervalId = null;
         let isPaused = false;
-        let isTyping = false; // 防抖标志
+        let isAnimating = false;
 
         // 获取情话
         function fetchQuote() {
@@ -289,18 +335,17 @@
                 .then(data => {
                     console.log('接口返回数据:', data);
                     if (data && typeof data === 'string' && data.trim() !== '') {
-                        // 避免重复添加
                         if (!quoteList.includes(data.trim())) {
                             quoteList.push(data.trim());
                         }
-                        if (!isTyping) {
+                        if (!isAnimating) {
                             updateMessage();
                         }
                     } else {
                         if (!quoteList.includes('加载失败，请稍后再试。')) {
                             quoteList.push('加载失败，请稍后再试。');
                         }
-                        if (!isTyping) {
+                        if (!isAnimating) {
                             updateMessage();
                         }
                     }
@@ -310,7 +355,7 @@
                     if (!quoteList.includes('加载失败，请稍后再试。')) {
                         quoteList.push('加载失败，请稍后再试。');
                     }
-                    if (!isTyping) {
+                    if (!isAnimating) {
                         updateMessage();
                     }
                     setTimeout(fetchQuote, 5000);
@@ -318,32 +363,41 @@
         }
 
         function updateMessage() {
-            if (isTyping) return; // 防抖
-            isTyping = true;
+            if (isAnimating) return;
+            isAnimating = true;
             const msg = document.getElementById('message');
-            if (quoteList.length > 0) {
-                let text = quoteList[currentIndex];
-                msg.textContent = '';
-                msg.style.opacity = 0;
-                setTimeout(() => {
-                    typeWriter(text, 0);
-                    msg.style.opacity = 1;
-                }, 500);
-                currentIndex = (currentIndex + 1) % quoteList.length;
-            } else {
-                msg.textContent = "加载中...";
-                isTyping = false;
-            }
-        }
+            const msgText = document.getElementById('message-text');
+            const particlesContainer = document.getElementById('text-particles');
 
-        function typeWriter(text, i) {
-            const msg = document.getElementById('message');
-            if (i < text.length) {
-                msg.textContent = text.substring(0, i + 1);
-                setTimeout(() => typeWriter(text, i + 1), 80);
-            } else {
-                isTyping = false;
-            }
+            // 淡出动画
+            msg.classList.remove('fade-in');
+            msg.classList.add('fade-out');
+
+            setTimeout(() => {
+                if (quoteList.length > 0) {
+                    msgText.textContent = quoteList[currentIndex];
+                    currentIndex = (currentIndex + 1) % quoteList.length;
+
+                    // 创建粒子
+                    particlesContainer.innerHTML = '';
+                    for (let i = 0; i < 10; i++) {
+                        const particle = document.createElement('div');
+                        particle.classList.add('text-particle');
+                        particle.style.left = `${Math.random() * 100}%`;
+                        particle.style.top = `${Math.random() * 100}%`;
+                        particle.style.setProperty('--x', Math.random());
+                        particle.style.setProperty('--y', Math.random());
+                        particlesContainer.appendChild(particle);
+                    }
+
+                    // 淡入动画
+                    msg.classList.remove('fade-out');
+                    msg.classList.add('fade-in');
+                } else {
+                    msgText.textContent = "加载中...";
+                }
+                isAnimating = false;
+            }, 1000); // 等待淡出动画完成
         }
 
         function startInterval() {
@@ -362,7 +416,7 @@
             } else {
                 pauseInterval();
                 isPaused = true;
-                if (!isTyping) {
+                if (!isAnimating) {
                     fetchQuote();
                 }
             }
@@ -376,7 +430,7 @@
                 } else {
                     pauseInterval();
                     isPaused = true;
-                    if (!isTyping) {
+                    if (!isAnimating) {
                         fetchQuote();
                     }
                 }
