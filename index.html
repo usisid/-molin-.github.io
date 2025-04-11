@@ -78,41 +78,12 @@
             margin-top: 30px;
             font-size: 28px;
             color: #fff;
-            background: linear-gradient(to right, #ff4d4d, #ff99cc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
             text-shadow: 0 0 10px rgba(255, 77, 77, 0.5);
             max-width: 80%;
             line-height: 1.5;
-            position: relative;
             padding: 10px 20px;
             border-radius: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
-            animation: fadeIn 1s ease-in-out;
-        }
-        .message::before {
-            content: '';
-            position: absolute;
-            top: -5px;
-            left: -5px;
-            right: -5px;
-            bottom: -5px;
-            border: 2px solid transparent;
-            border-radius: 15px;
-            background: linear-gradient(45deg, #ff4d4d, #ff99cc) border-box;
-            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: destination-out;
-            mask-composite: exclude;
-            animation: borderGlow 2s infinite;
-        }
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes borderGlow {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
+            background: rgba(0, 0, 0, 0.3);
         }
         .stars {
             position: absolute;
@@ -224,25 +195,20 @@
                     'Accept': 'application/json'
                 }
             })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('网络响应失败: ' + response.status);
-                    }
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(data => {
                     console.log('接口返回数据:', data); // 调试用
                     if (data && data.data && typeof data.data === 'string' && data.data.trim() !== '') {
                         quoteList.push(data.data);
                         updateMessage();
                     } else {
-                        quoteList.push('接口返回数据无效，请稍后再试。');
+                        quoteList.push('加载失败，请稍后再试。');
                         updateMessage();
                     }
                 })
                 .catch(error => {
                     console.error('获取情话失败:', error);
-                    quoteList.push('无法获取情话，请检查网络。');
+                    quoteList.push('加载失败，请稍后再试。');
                     updateMessage();
                 });
         }
