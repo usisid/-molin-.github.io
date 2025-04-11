@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="A stunning romantic webpage for a competition, featuring a beautiful heart, love quotes, and immersive effects.">
     <meta name="keywords" content="romantic, heart, love quotes, competition, web design">
+    <meta name="author" content="Grok 3">
     <title>至臻爱心 - 极致比赛作品</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
@@ -14,7 +15,6 @@
             --secondary-color: #ff99cc;
             --background-start: #1a1a3d;
             --background-end: #0a0a1d;
-            --text-shadow: 0 0 15px rgba(255, 77, 77, 0.7), 0 0 30px rgba(255, 99, 99, 0.5);
             --heart-size: 140px;
         }
 
@@ -41,7 +41,7 @@
             z-index: 1;
             text-align: center;
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             align-items: center;
             justify-content: center;
             width: 100%;
@@ -55,12 +55,7 @@
             position: relative;
             animation: beat 2s infinite ease-in-out, sway 4s infinite ease-in-out;
             cursor: pointer;
-            transition: transform 0.3s ease;
             z-index: 2;
-        }
-
-        .heart:hover {
-            transform: scale(1.1);
         }
 
         .heart svg {
@@ -103,10 +98,10 @@
 
         @keyframes orbit {
             0% {
-                transform: translate(-50%, -50%) rotate(0deg) translateX(60px) rotate(0deg);
+                transform: translate(-50%, -50%) rotate(0deg) translateX(70px) rotate(0deg);
             }
             100% {
-                transform: translate(-50%, -50%) rotate(360deg) translateX(60px) rotate(-360deg);
+                transform: translate(-50%, -50%) rotate(360deg) translateX(70px) rotate(-360deg);
             }
         }
 
@@ -135,52 +130,38 @@
             50% { opacity: 0.6; }
         }
 
-        .message {
-            font-size: clamp(20px, 3vw, 32px);
+        .message-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-height: 100px; /* 缩短情话区域 */
+        }
+
+        .message-left, .message-right {
+            font-size: clamp(16px, 2vw, 24px);
             color: #fff;
-            text-shadow: var(--text-shadow);
-            max-width: 90%;
+            max-width: 45%;
             line-height: 1.4;
-            position: relative;
-            animation: breathe 4s infinite ease-in-out;
-            cursor: pointer;
-            transition: transform 0.3s ease;
             white-space: normal;
             word-wrap: break-word;
             z-index: 1;
+            animation: slide 5s infinite linear;
         }
 
-        .message:hover {
-            transform: scale(1.05);
+        .message-left {
+            text-align: right;
+            margin-right: 20px;
         }
 
-        @keyframes breathe {
-            0%, 100% { text-shadow: var(--text-shadow); }
-            50% { text-shadow: 0 0 25px rgba(255, 77, 77, 0.9), 0 0 50px rgba(255, 99, 99, 0.7); }
+        .message-right {
+            text-align: left;
+            margin-left: 20px;
         }
 
-        .text-particles {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .text-particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: var(--secondary-color);
-            border-radius: 50%;
-            animation: scatter 2s ease-out forwards;
-        }
-
-        @keyframes scatter {
-            0% { opacity: 1; transform: translate(0, 0); }
-            100% { opacity: 0; transform: translate(calc((var(--x) - 0.5) * 100px), calc((var(--y) - 0.5) * 100px)); }
+        @keyframes slide {
+            0% { transform: translateX(-20px); opacity: 0.5; }
+            50% { transform: translateX(20px); opacity: 1; }
+            100% { transform: translateX(-20px); opacity: 0.5; }
         }
 
         .heart-explosion {
@@ -293,6 +274,21 @@
             animation: lensFlare 10s infinite;
         }
 
+        .meteor {
+            position: absolute;
+            width: 4px;
+            height: 150px;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            animation: meteor 6s infinite ease-in-out;
+            z-index: 1;
+        }
+
+        @keyframes meteor {
+            0% { transform: translateX(0) translateY(-100vh) rotate(45deg); opacity: 1; }
+            100% { transform: translateX(calc(400px + var(--offset))) translateY(100vh) rotate(45deg); opacity: 0; }
+        }
+
         @keyframes twinkle {
             0%, 100% { opacity: 0.4; }
             50% { opacity: 0.8; }
@@ -318,26 +314,12 @@
             50% { opacity: 0.5; transform: scale(1.2); }
         }
 
-        .meteor {
-            position: absolute;
-            width: 2px;
-            height: 120px;
-            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.9), transparent);
-            animation: meteor 6s infinite ease-in-out;
-            z-index: 1;
-        }
-
-        @keyframes meteor {
-            0% { transform: translateX(0) translateY(-100vh) rotate(45deg); opacity: 1; }
-            100% { transform: translateX(400px) translateY(100vh) rotate(45deg); opacity: 0; }
-        }
-
         @media (max-width: 600px) {
             :root {
                 --heart-size: 120px;
             }
-            .message {
-                font-size: clamp(16px, 2.5vw, 24px);
+            .message-left, .message-right {
+                font-size: clamp(12px, 1.5vw, 18px);
             }
         }
     </style>
@@ -355,42 +337,42 @@
     <div class="sparkle" style="top: 50%; left: 80%; animation-delay: 3s;"></div>
     <div class="lens-flare" style="top: 10%; left: 10%; animation-delay: 0s;"></div>
     <div class="lens-flare" style="top: 60%; left: 80%; animation-delay: 5s;"></div>
-    <div class="meteor" style="left: 10%; animation-delay: 0s;"></div>
-    <div class="meteor" style="left: 30%; animation-delay: 1s;"></div>
-    <div class="meteor" style="left: 50%; animation-delay: 2s;"></div>
-    <div class="meteor" style="left: 70%; animation-delay: 3s;"></div>
-    <div class="meteor" style="left: 90%; animation-delay: 4s;"></div>
+    <div class="meteor" style="left: 10%; animation-delay: 0s; --offset: 0px;"></div>
+    <div class="meteor" style="left: 30%; animation-delay: 1s; --offset: 50px;"></div>
+    <div class="meteor" style="left: 50%; animation-delay: 2s; --offset: -50px;"></div>
+    <div class="meteor" style="left: 70%; animation-delay: 3s; --offset: 100px;"></div>
+    <div class="meteor" style="left: 90%; animation-delay: 4s; --offset: -100px;"></div>
     <div class="container">
-        <div class="heart" id="heart" role="img" aria-label="Heart">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="url(#grad)" stroke="#ff4d4d" stroke-width="1"/>
-                <path d="M12 19.5l-1.2-1.1C6.5 14.5 4 12 4 8.5 4 6 5.5 4 8 4c1.5 0 2.8.7 3.5 1.8C12.2 4.7 13.5 4 15 4c2.5 0 4 2 4 4.5 0 3.5-2.5 6-6.8 9.9L12 19.5z" fill="url(#innerGrad)" opacity="0.6"/>
-                <defs>
-                    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:var(--primary-color);stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:var(--secondary-color);stop-opacity:1" />
-                    </linearGradient>
-                    <linearGradient id="innerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:var(--secondary-color);stop-opacity:0.8" />
-                        <stop offset="100%" style="stop-color:var(--primary-color);stop-opacity:0.5" />
-                    </linearGradient>
-                </defs>
-            </svg>
-            <div class="heart-particles">
-                <div class="heart-particle" style="animation-delay: 0s;"></div>
-                <div class="heart-particle" style="animation-delay: 0.75s;"></div>
-                <div class="heart-particle" style="animation-delay: 1.5s;"></div>
-                <div class="heart-particle" style="animation-delay: 2.25s;"></div>
-                <div class="heart-particle" style="animation-delay: 3s;"></div>
-                <div class="heart-particle" style="animation-delay: 3.75s;"></div>
-                <div class="heart-particle" style="animation-delay: 4.5s;"></div>
-                <div class="heart-particle" style="animation-delay: 5.25s;"></div>
+        <V        <div class="message-container">
+            <div class="message-left" id="message-left">加载中...</div>
+            <div class="heart" id="heart" role="img" aria-label="Heart">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="url(#grad)" stroke="#ff4d4d" stroke-width="1"/>
+                    <path d="M12 19.5l-1.2-1.1C6.5 14.5 4 12 4 8.5 4 6 5.5 4 8 4c1.5 0 2.8.7 3.5 1.8C12.2 4.7 13.5 4 15 4c2.5 0 4 2 4 4.5 0 3.5-2.5 6-6.8 9.9L12 19.5z" fill="url(#innerGrad)" opacity="0.6"/>
+                    <defs>
+                        <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:var(--primary-color);stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:var(--secondary-color);stop-opacity:1" />
+                        </linearGradient>
+                        <linearGradient id="innerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:var(--secondary-color);stop-opacity:0.8" />
+                            <stop offset="100%" style="stop-color:var(--primary-color);stop-opacity:0.5" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <div class="heart-particles">
+                    <div class="heart-particle" style="animation-delay: 0s;"></div>
+                    <div class="heart-particle" style="animation-delay: 0.75s;"></div>
+                    <div class="heart-particle" style="animation-delay: 1.5s;"></div>
+                    <div class="heart-particle" style="animation-delay: 2.25s;"></div>
+                    <div class="heart-particle" style="animation-delay: 3s;"></div>
+                    <div class="heart-particle" style="animation-delay: 3.75s;"></div>
+                    <div class="heart-particle" style="animation-delay: 4.5s;"></div>
+                    <div class="heart-particle" style="animation-delay: 5.25s;"></div>
+                </div>
+                <div class="heart-explosion" id="heart-explosion"></div>
             </div>
-            <div class="heart-explosion" id="heart-explosion"></div>
-        </div>
-        <div class="message" id="message" role="button" aria-label="Love Quote" tabindex="0">
-            <span id="message-text">加载中...</span>
-            <div class="text-particles" id="text-particles"></div>
+            <div class="message-right" id="message-right"></div>
         </div>
     </div>
     <audio id="bgm" loop>
@@ -403,7 +385,6 @@
         let currentIndex = 0;
         let intervalId = null;
         let isPaused = false;
-        let isAnimating = false;
 
         // 获取情话
         function fetchQuote() {
@@ -422,16 +403,12 @@
                         if (!quoteList.includes(data.trim())) {
                             quoteList.push(data.trim());
                         }
-                        if (!isAnimating) {
-                            updateMessage();
-                        }
+                        updateMessage();
                     } else {
                         if (!quoteList.includes('加载失败，请稍后再试。')) {
                             quoteList.push('加载失败，请稍后再试。');
                         }
-                        if (!isAnimating) {
-                            updateMessage();
-                        }
+                        updateMessage();
                     }
                 })
                 .catch(error => {
@@ -439,38 +416,31 @@
                     if (!quoteList.includes('加载失败，请稍后再试。')) {
                         quoteList.push('加载失败，请稍后再试。');
                     }
-                    if (!isAnimating) {
-                        updateMessage();
-                    }
+                    updateMessage();
                     setTimeout(fetchQuote, 5000);
                 });
         }
 
         function updateMessage() {
-            if (isAnimating) return;
-            isAnimating = true;
-            const msgText = document.getElementById('message-text');
-            const particlesContainer = document.getElementById('text-particles');
+            const msgLeft = document.getElementById('message-left');
+            const msgRight = document.getElementById('message-right');
 
             if (quoteList.length > 0) {
-                msgText.textContent = quoteList[currentIndex];
-                currentIndex = (currentIndex + 1) % quoteList.length;
+                let text = quoteList[currentIndex];
+                // 简单拆分情话为两部分
+                let words = text.split(' ');
+                let mid = Math.floor(words.length / 2);
+                let leftText = words.slice(0, mid).join(' ');
+                let rightText = words.slice(mid).join(' ');
 
-                // 创建粒子
-                particlesContainer.innerHTML = '';
-                for (let i = 0; i < 15; i++) {
-                    const particle = document.createElement('div');
-                    particle.classList.add('text-particle');
-                    particle.style.left = `${Math.random() * 100}%`;
-                    particle.style.top = `${Math.random() * 100}%`;
-                    particle.style.setProperty('--x', Math.random());
-                    particle.style.setProperty('--y', Math.random());
-                    particlesContainer.appendChild(particle);
-                }
+                msgLeft.textContent = leftText;
+                msgRight.textContent = rightText;
+
+                currentIndex = (currentIndex + 1) % quoteList.length;
             } else {
-                msgText.textContent = "加载中...";
+                msgLeft.textContent = "加载中...";
+                msgRight.textContent = "";
             }
-            isAnimating = false;
         }
 
         function startInterval() {
@@ -481,41 +451,18 @@
             clearInterval(intervalId);
         }
 
-        const message = document.getElementById('message');
-        message.addEventListener('click', () => {
+        const heart = document.getElementById('heart');
+        heart.addEventListener('click', () => {
             if (isPaused) {
                 startInterval();
                 isPaused = false;
             } else {
                 pauseInterval();
                 isPaused = true;
-                if (!isAnimating) {
-                    fetchQuote();
-                }
+                fetchQuote();
             }
-        });
 
-        message.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                if (isPaused) {
-                    startInterval();
-                    isPaused = false;
-                } else {
-                    pauseInterval();
-                    isPaused = true;
-                    if (!isAnimating) {
-                        fetchQuote();
-                    }
-                }
-            }
-        });
-
-        fetchQuote();
-        startInterval();
-
-        // 爱心点击粒子爆炸
-        const heart = document.getElementById('heart');
-        heart.addEventListener('click', () => {
+            // 爱心点击粒子爆炸
             const explosionContainer = document.getElementById('heart-explosion');
             explosionContainer.innerHTML = '';
             for (let i = 0; i < 20; i++) {
@@ -537,6 +484,9 @@
             sparkle.style.top = `${e.clientY}px`;
             document.body.appendChild(sparkle);
         });
+
+        fetchQuote();
+        startInterval();
 
         // 背景音乐
         window.addEventListener('load', () => {
