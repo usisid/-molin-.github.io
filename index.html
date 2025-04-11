@@ -74,6 +74,17 @@
             animation: glow 3s infinite;
         }
 
+        .heart-glow-ring {
+            position: absolute;
+            top: -40px;
+            left: -40px;
+            width: calc(var(--heart-size) + 80px);
+            height: calc(var(--heart-size) + 80px);
+            background: radial-gradient(circle, rgba(255, 99, 204, 0.2), transparent);
+            z-index: -1;
+            animation: glow 5s infinite;
+        }
+
         .heart-particles {
             position: absolute;
             width: var(--heart-size);
@@ -90,18 +101,15 @@
             background: var(--secondary-color);
             border-radius: 50%;
             animation: orbit 6s infinite linear, particleGlow 2s infinite, particleScale 3s infinite;
-            top: 50%;
-            left: 50%;
-            transform-origin: 0 0;
             box-shadow: 0 0 10px rgba(255, 99, 204, 0.5);
         }
 
         @keyframes orbit {
             0% {
-                transform: translate(-50%, -50%) rotate(0deg) translateX(70px) rotate(0deg);
+                transform: rotate(0deg) translateX(70px) rotate(0deg);
             }
             100% {
-                transform: translate(-50%, -50%) rotate(360deg) translateX(70px) rotate(-360deg);
+                transform: rotate(360deg) translateX(70px) rotate(-360deg);
             }
         }
 
@@ -111,8 +119,8 @@
         }
 
         @keyframes particleScale {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.5); }
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.5); }
         }
 
         @keyframes beat {
@@ -134,7 +142,7 @@
             display: flex;
             justify-content: space-between;
             width: 100%;
-            max-height: 100px; /* 缩短情话区域 */
+            max-height: 100px;
         }
 
         .message-left, .message-right {
@@ -145,23 +153,24 @@
             white-space: normal;
             word-wrap: break-word;
             z-index: 1;
-            animation: slide 5s infinite linear;
+            writing-mode: vertical-rl; /* 竖向展示 */
+            animation: slideVertical 5s infinite linear;
         }
 
         .message-left {
             text-align: right;
-            margin-right: 20px;
+            margin-right: 30px;
         }
 
         .message-right {
             text-align: left;
-            margin-left: 20px;
+            margin-left: 30px;
         }
 
-        @keyframes slide {
-            0% { transform: translateX(-20px); opacity: 0.5; }
-            50% { transform: translateX(20px); opacity: 1; }
-            100% { transform: translateX(-20px); opacity: 0.5; }
+        @keyframes slideVertical {
+            0% { transform: translateY(-20px); opacity: 0.5; }
+            50% { transform: translateY(20px); opacity: 1; }
+            100% { transform: translateY(-20px); opacity: 0.5; }
         }
 
         .heart-explosion {
@@ -198,14 +207,23 @@
             animation: twinkle 10s infinite;
         }
 
-        .nebula {
+        .nebula-1, .nebula-2 {
             position: absolute;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 30% 70%, rgba(255, 99, 99, 0.1), transparent 50%);
-            opacity: 0.3;
             z-index: 0;
             animation: nebulaGlow 15s infinite;
+        }
+
+        .nebula-1 {
+            background: radial-gradient(circle at 30% 70%, rgba(255, 99, 204, 0.1), transparent 50%);
+            opacity: 0.3;
+        }
+
+        .nebula-2 {
+            background: radial-gradient(circle at 70% 30%, rgba(147, 112, 219, 0.1), transparent 50%);
+            opacity: 0.2;
+            animation-delay: 5s;
         }
 
         .star-cluster-large, .star-cluster-medium, .star-cluster-small {
@@ -254,6 +272,31 @@
             animation: starTrail 20s infinite linear;
         }
 
+        .floating-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .floating-particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(255, 99, 204, 0.5);
+            border-radius: 50%;
+            animation: float 10s infinite ease-in-out;
+        }
+
+        .background-glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(255, 99, 204, 0.05), transparent 70%);
+            z-index: 0;
+            animation: glow 10s infinite;
+        }
+
         .sparkle {
             position: absolute;
             width: 3px;
@@ -268,7 +311,7 @@
             position: absolute;
             width: 100px;
             height: 100px;
-            background: radial-gradient(circle, rgba(255, 99, 99, 0.2), transparent);
+            background: radial-gradient(circle, rgba(255, 99, 204, 0.2), transparent);
             opacity: 0.3;
             z-index: 0;
             animation: lensFlare 10s infinite;
@@ -304,6 +347,12 @@
             100% { transform: translateX(100%); }
         }
 
+        @keyframes float {
+            0% { transform: translateY(0); opacity: 0.5; }
+            50% { transform: translateY(-50px); opacity: 1; }
+            100% { transform: translateY(0); opacity: 0.5; }
+        }
+
         @keyframes sparkle {
             0%, 100% { opacity: 0; transform: scale(1); }
             50% { opacity: 1; transform: scale(1.5); }
@@ -326,11 +375,20 @@
 </head>
 <body>
     <div class="stars"></div>
-    <div class="nebula"></div>
+    <div class="nebula-1"></div>
+    <div class="nebula-2"></div>
     <div class="star-cluster-large"></div>
     <div class="star-cluster-medium"></div>
     <div class="star-cluster-small"></div>
     <div class="star-trail"></div>
+    <div class="floating-particles">
+        <div class="floating-particle" style="top: 20%; left: 10%; animation-delay: 0s;"></div>
+        <div class="floating-particle" style="top: 30%; left: 40%; animation-delay: 2s;"></div>
+        <div class="floating-particle" style="top: 50%; left: 60%; animation-delay: 4s;"></div>
+        <div class="floating-particle" style="top: 70%; left: 20%; animation-delay: 6s;"></div>
+        <div class="floating-particle" style="top: 80%; left: 80%; animation-delay: 8s;"></div>
+    </div>
+    <div class="background-glow"></div>
     <div class="sparkle" style="top: 20%; left: 30%; animation-delay: 0s;"></div>
     <div class="sparkle" style="top: 40%; left: 60%; animation-delay: 1s;"></div>
     <div class="sparkle" style="top: 70%; left: 20%; animation-delay: 2s;"></div>
@@ -338,12 +396,13 @@
     <div class="lens-flare" style="top: 10%; left: 10%; animation-delay: 0s;"></div>
     <div class="lens-flare" style="top: 60%; left: 80%; animation-delay: 5s;"></div>
     <div class="meteor" style="left: 10%; animation-delay: 0s; --offset: 0px;"></div>
-    <div class="meteor" style="left: 30%; animation-delay: 1s; --offset: 50px;"></div>
-    <div class="meteor" style="left: 50%; animation-delay: 2s; --offset: -50px;"></div>
-    <div class="meteor" style="left: 70%; animation-delay: 3s; --offset: 100px;"></div>
-    <div class="meteor" style="left: 90%; animation-delay: 4s; --offset: -100px;"></div>
+    <div class="meteor" style="left: 25%; animation-delay: 1s; --offset: 50px;"></div>
+    <div class="meteor" style="left: 40%; animation-delay: 2s; --offset: -50px;"></div>
+    <div class="meteor" style="left: 55%; animation-delay: 3s; --offset: 100px;"></div>
+    <div class="meteor" style="left: 70%; animation-delay: 4s; --offset: -100px;"></div>
+    <div class="meteor" style="left: 85%; animation-delay: 5s; --offset: 0px;"></div>
     <div class="container">
-        <V        <div class="message-container">
+        <div class="message-container">
             <div class="message-left" id="message-left">加载中...</div>
             <div class="heart" id="heart" role="img" aria-label="Heart">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -370,6 +429,7 @@
                     <div class="heart-particle" style="animation-delay: 4.5s;"></div>
                     <div class="heart-particle" style="animation-delay: 5.25s;"></div>
                 </div>
+                <div class="heart-glow-ring"></div>
                 <div class="heart-explosion" id="heart-explosion"></div>
             </div>
             <div class="message-right" id="message-right"></div>
