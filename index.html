@@ -211,15 +211,20 @@
                 },
                 body: JSON.stringify({})
             })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('网络响应失败');
+                    }
+                    return response.json();
+                })
                 .then(data => {
-                    if (data && data.data) {
+                    console.log('接口返回数据:', data); // 调试用
+                    if (data && data.data && typeof data.data === 'string' && data.data.trim() !== '') {
                         quoteList.push(data.data);
-                        updateMessage();
                     } else {
                         quoteList.push(quotes[Math.floor(Math.random() * quotes.length)]);
-                        updateMessage();
                     }
+                    updateMessage();
                 })
                 .catch(error => {
                     console.error('获取情话失败:', error);
