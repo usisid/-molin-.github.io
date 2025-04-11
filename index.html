@@ -2,192 +2,299 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>给你的至臻爱心</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A stunning romantic webpage for a competition, featuring a 3D heart, love quotes, and immersive effects.">
+    <meta name="keywords" content="romantic, 3D heart, love quotes, competition, web design">
+    <meta name="author" content="Grok 3">
+    <title>丹丹专属</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     <style>
-        body {
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+        :root {
+            --primary-color: #ff4d4d;
+            --secondary-color: #ff99cc;
+            --background-start: #1a1a3d;
+            --background-end: #0a0a1d;
+            --text-shadow: 0 0 15px rgba(255, 77, 77, 0.7), 0 0 30px rgba(255, 99, 99, 0.5);
+            --heart-size: 200px;
+        }
+
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
             height: 100vh;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #1a1a3d, #2a2a5d);
+            background: radial-gradient(circle at center, var(--background-start) 0%, var(--background-end) 100%);
             overflow: hidden;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Great Vibes', cursive;
             position: relative;
+            color: #fff;
         }
-        canvas {
+
+        #scene {
             position: absolute;
             top: 0;
             left: 0;
+            width: 100%;
+            height: 100%;
             z-index: 0;
         }
+
         .container {
             position: relative;
             z-index: 1;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
         }
-        .heart {
-            width: 200px;
-            height: 200px;
+
+        .heart-container {
+            width: var(--heart-size);
+            height: var(--heart-size);
+            margin-bottom: 30px;
+        }
+
+        .message {
+            font-size: clamp(24px, 4vw, 36px);
+            color: #fff;
+            text-shadow: var(--text-shadow);
+            max-width: 90%;
+            line-height: 1.4;
+            padding: 15px 30px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
             position: relative;
-            animation: beat 1.5s infinite ease-in-out;
+            animation: breathe 4s infinite ease-in-out;
+            cursor: pointer;
+            transition: transform 0.3s ease;
         }
-        .heart svg {
-            filter: drop-shadow(0 0 20px rgba(255, 77, 77, 0.8));
+
+        .message:hover {
+            transform: scale(1.05);
         }
-        .heart::after {
+
+        .message::before {
             content: '';
             position: absolute;
-            top: -20px;
-            left: -20px;
-            width: 240px;
-            height: 240px;
-            background: radial-gradient(circle, rgba(255, 77, 77, 0.3), transparent);
-            animation: glow 2s infinite;
-            z-index: -1;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            border: 2px solid transparent;
+            border-radius: 18px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: destination-out;
+            mask-composite: exclude;
+            animation: borderGlow 3s infinite;
         }
-        .heart-particles {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
+
+        .message::after {
+            content: '|';
+            display: inline-block;
+            animation: blink 1s infinite step-end;
+            margin-left: 5px;
         }
-        .heart-particle {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            background: rgba(255, 99, 99, 0.8);
-            border-radius: 50%;
-            animation: orbit 5s infinite linear;
+
+        @keyframes breathe {
+            0%, 100% { text-shadow: var(--text-shadow); }
+            50% { text-shadow: 0 0 25px rgba(255, 77, 77, 0.9), 0 0 50px rgba(255, 99, 99, 0.7); }
         }
-        @keyframes beat {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.15); }
-        }
-        @keyframes glow {
+
+        @keyframes borderGlow {
             0%, 100% { opacity: 0.5; }
             50% { opacity: 1; }
         }
-        @keyframes orbit {
-            0% { transform: rotate(0deg) translateX(120px) rotate(0deg); }
-            100% { transform: rotate(360deg) translateX(120px) rotate(-360deg); }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
         }
-        .message {
-            margin-top: 30px;
-            font-size: 28px;
-            color: #fff;
-            text-shadow: 0 0 10px rgba(255, 77, 77, 0.5);
-            max-width: 80%;
-            line-height: 1.5;
-            padding: 10px 20px;
-            border-radius: 10px;
-            background: rgba(0, 0, 0, 0.3);
-        }
+
         .stars {
             position: absolute;
             width: 100%;
             height: 100%;
             background: url('https://www.transparenttextures.com/patterns/stardust.png');
+            opacity: 0.4;
+            z-index: 0;
+            animation: twinkle 10s infinite;
+        }
+
+        .nebula {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 70%, rgba(255, 99, 99, 0.1), transparent 50%);
             opacity: 0.3;
             z-index: 0;
+            animation: nebulaGlow 15s infinite;
         }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.6; }
+        }
+
+        @keyframes nebulaGlow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.5; }
+        }
+
         .meteor {
             position: absolute;
             width: 2px;
-            height: 100px;
-            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), transparent);
-            animation: meteor 5s infinite;
+            height: 120px;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.9), transparent);
+            animation: meteor 6s infinite ease-in-out;
             z-index: 1;
         }
+
         @keyframes meteor {
-            0% { transform: translateX(0) translateY(-100%); opacity: 1; }
-            100% { transform: translateX(300px) translateY(100vh); opacity: 0; }
+            0% { transform: translateX(0) translateY(-100vh) rotate(45deg); opacity: 1; }
+            100% { transform: translateX(400px) translateY(100vh) rotate(45deg); opacity: 0; }
+        }
+
+        @media (max-width: 600px) {
+            :root {
+                --heart-size: 150px;
+            }
+            .message {
+                font-size: clamp(20px, 3vw, 28px);
+                padding: 10px 20px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="stars"></div>
-    <canvas id="canvas"></canvas>
-    <div class="meteor" style="left: 20%; animation-delay: 0s;"></div>
-    <div class="meteor" style="left: 50%; animation-delay: 2s;"></div>
-    <div class="meteor" style="left: 80%; animation-delay: 4s;"></div>
+    <div class="nebula"></div>
+    <div id="scene"></div>
+    <div class="meteor" style="left: 10%; animation-delay: 0s;"></div>
+    <div class="meteor" style="left: 40%; animation-delay: 2s;"></div>
+    <div class="meteor" style="left: 70%; animation-delay: 4s;"></div>
     <div class="container">
-        <div class="heart">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="url(#grad)" stroke="#ff4d4d" stroke-width="1"/>
-                <path d="M12 19.5l-1.2-1.1C6.5 14.5 4 12 4 8.5 4 6 5.5 4 8 4c1.5 0 2.8.7 3.5 1.8C12.2 4.7 13.5 4 15 4c2.5 0 4 2 4 4.5 0 3.5-2.5 6-6.8 9.9L12 19.5z" fill="url(#innerGrad)" opacity="0.6"/>
-                <defs>
-                    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#ff4d4d;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#ff99cc;stop-opacity:1" />
-                    </linearGradient>
-                    <linearGradient id="innerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#ff99cc;stop-opacity:0.8" />
-                        <stop offset="100%" style="stop-color:#ff4d4d;stop-opacity:0.5" />
-                    </linearGradient>
-                </defs>
-            </svg>
-            <div class="heart-particles">
-                <div class="heart-particle" style="animation-delay: 0s;"></div>
-                <div class="heart-particle" style="animation-delay: 1s;"></div>
-                <div class="heart-particle" style="animation-delay: 2s;"></div>
-                <div class="heart-particle" style="animation-delay: 3s;"></div>
-            </div>
-        </div>
-        <div class="message" id="message">加载中...</div>
+        <div class="heart-container" id="heart-container" role="img" aria-label="3D Heart"></div>
+        <div class="message" id="message" role="button" aria-label="Love Quote" tabindex="0">加载中...</div>
     </div>
-    <audio id="bgm" loop autoplay>
+    <audio id="bgm" loop>
         <source src="https://www.kozco.com/tech/piano2.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        // 粒子背景
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        // Three.js 场景设置
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('scene').appendChild(renderer.domElement);
 
-        let particles = [];
-        function createParticle() {
-            return {
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                size: Math.random() * 3 + 1,
-                speedX: Math.random() * 0.5 - 0.25,
-                speedY: Math.random() * 0.5 - 0.25,
-                color: `hsl(${Math.random() * 360}, 70%, 70%)`
-            };
+        // 爱心模型
+        const heartShape = new THREE.Shape();
+        heartShape.moveTo(0, 0);
+        heartShape.bezierCurveTo(0, -0.3, -0.5, -0.5, -0.5, -0.5);
+        heartShape.bezierCurveTo(-1, -0.5, -1, 0, -1, 0);
+        heartShape.bezierCurveTo(-1, 0.5, -0.5, 1, 0, 1);
+        heartShape.bezierCurveTo(0.5, 1, 1, 0.5, 1, 0);
+        heartShape.bezierCurveTo(1, 0, 1, -0.5, 0.5, -0.5);
+        heartShape.bezierCurveTo(0.5, -0.5, 0, -0.3, 0, 0);
+
+        const extrudeSettings = { depth: 0.2, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 0.1, bevelThickness: 0.1 };
+        const heartGeometry = new THREE.ExtrudeGeometry(heartShape, extrudeSettings);
+        const heartMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xff4d4d,
+            metalness: 0.5,
+            roughness: 0.3,
+            clearcoat: 1.0,
+            clearcoatRoughness: 0.1,
+            transparent: true,
+            opacity: 0.9,
+            side: THREE.DoubleSide
+        });
+        const heart = new THREE.Mesh(heartGeometry, heartMaterial);
+        heart.scale.set(2, 2, 2);
+        heart.position.set(0, 0, 0);
+        scene.add(heart);
+
+        // 灯光
+        const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+        scene.add(ambientLight);
+        const pointLight = new THREE.PointLight(0xff4d4d, 1, 100);
+        pointLight.position.set(0, 5, 5);
+        scene.add(pointLight);
+
+        // 粒子系统
+        const particleGeometry = new THREE.BufferGeometry();
+        const particleCount = 500;
+        const positions = new Float32Array(particleCount * 3);
+        const colors = new Float32Array(particleCount * 3);
+        for (let i = 0; i < particleCount; i++) {
+            positions[i * 3] = (Math.random() - 0.5) * 10;
+            positions[i * 3 + 1] = (Math.random() - 0.5) * 10;
+            positions[i * 3 + 2] = (Math.random() - 0.5) * 10;
+            colors[i * 3] = 1;
+            colors[i * 3 + 1] = Math.random() * 0.5 + 0.5;
+            colors[i * 3 + 2] = Math.random() * 0.5 + 0.5;
         }
+        particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        const particleMaterial = new THREE.PointsMaterial({
+            size: 0.1,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.8
+        });
+        const particles = new THREE.Points(particleGeometry, particleMaterial);
+        scene.add(particles);
 
-        for (let i = 0; i < 200; i++) {
-            particles.push(createParticle());
-        }
+        camera.position.z = 5;
 
+        // 鼠标交互
+        let mouseX = 0, mouseY = 0;
+        let targetRotationX = 0, targetRotationY = 0;
+        document.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+            mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+            targetRotationY = mouseX * Math.PI * 0.5;
+            targetRotationX = mouseY * Math.PI * 0.5;
+        });
+
+        // 动画
         function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => {
-                ctx.fillStyle = p.color;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                ctx.fill();
-
-                p.x += p.speedX;
-                p.y += p.speedY;
-
-                if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
-                if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
-            });
             requestAnimationFrame(animate);
+            heart.rotation.x += (targetRotationX - heart.rotation.x) * 0.05;
+            heart.rotation.y += (targetRotationY - heart.rotation.y) * 0.05;
+            heart.rotation.z += 0.01;
+            particles.rotation.y += 0.005;
+            const positions = particles.geometry.attributes.position.array;
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3 + 1] += Math.sin(Date.now() * 0.001 + positions[i * 3]) * 0.01;
+                if (positions[i * 3 + 1] > 5) positions[i * 3 + 1] = -5;
+            }
+            particles.geometry.attributes.position.needsUpdate = true;
+            renderer.render(scene, camera);
         }
         animate();
 
         // 情话轮播
         let quoteList = [];
         let currentIndex = 0;
+        let intervalId = null;
+        let isPaused = false;
 
-        // 获取情话
         function fetchQuote() {
             fetch('https://api.yaohud.cn/api/randtext/twqh?key=16WXtpzYbW1h4dA7h81', {
                 method: 'GET'
@@ -196,10 +303,10 @@
                     if (!response.ok) {
                         throw new Error('网络响应失败: ' + response.status);
                     }
-                    return response.text(); // 直接获取纯文本
+                    return response.text();
                 })
                 .then(data => {
-                    console.log('接口返回数据:', data); // 调试用
+                    console.log('接口返回数据:', data);
                     if (data && typeof data === 'string' && data.trim() !== '') {
                         quoteList.push(data.trim());
                         updateMessage();
@@ -211,7 +318,8 @@
                 .catch(error => {
                     console.error('获取情话失败:', error);
                     quoteList.push('加载失败，请稍后再试。');
-                    updateMessage();
+                    // 指数退避重试
+                    setTimeout(fetchQuote, 5000);
                 });
         }
 
@@ -219,26 +327,75 @@
             const msg = document.getElementById('message');
             if (quoteList.length > 0) {
                 let text = quoteList[currentIndex];
-                msg.textContent = ''; // 清空内容
-                typeWriter(text, 0);
+                msg.textContent = '';
+                msg.style.opacity = 0;
+                setTimeout(() => {
+                    typeWriter(text, 0);
+                    msg.style.opacity = 1;
+                }, 500);
                 currentIndex = (currentIndex + 1) % quoteList.length;
             } else {
                 msg.textContent = "加载中...";
             }
         }
 
-        // 打字机效果
         function typeWriter(text, i) {
             const msg = document.getElementById('message');
             if (i < text.length) {
-                msg.textContent += text.charAt(i);
-                setTimeout(() => typeWriter(text, i + 1), 100);
+                msg.textContent = text.substring(0, i + 1);
+                setTimeout(() => typeWriter(text, i + 1), 80);
             }
         }
 
-        // 每5秒更新一次
+        function startInterval() {
+            intervalId = setInterval(fetchQuote, 5000);
+        }
+
+        function pauseInterval() {
+            clearInterval(intervalId);
+        }
+
+        const message = document.getElementById('message');
+        message.addEventListener('click', () => {
+            if (isPaused) {
+                startInterval();
+                isPaused = false;
+            } else {
+                pauseInterval();
+                isPaused = true;
+                fetchQuote(); // 手动切换到下一句
+            }
+        });
+
+        message.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                if (isPaused) {
+                    startInterval();
+                    isPaused = false;
+                } else {
+                    pauseInterval();
+                    isPaused = true;
+                    fetchQuote();
+                }
+            }
+        });
+
         fetchQuote();
-        setInterval(fetchQuote, 5000);
+        startInterval();
+
+        // 背景音乐
+        window.addEventListener('load', () => {
+            const bgm = document.getElementById('bgm');
+            bgm.volume = 0.3;
+            bgm.play().catch(error => console.error('背景音乐播放失败:', error));
+        });
+
+        // 窗口调整
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
     </script>
 </body>
 </html>
