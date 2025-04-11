@@ -221,12 +221,12 @@
             fetch('https://api.yaohud.cn/api/randtext/twqh?key=16WXtpzYbW1h4dA7h81', {
                 method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Accept': 'application/json'
                 }
             })
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('网络响应失败');
+                        throw new Error('网络响应失败: ' + response.status);
                     }
                     return response.json();
                 })
