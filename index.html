@@ -190,16 +190,18 @@
         // 获取情话
         function fetchQuote() {
             fetch('https://api.yaohud.cn/api/randtext/twqh?key=16WXtpzYbW1h4dA7h81', {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json'
-                }
+                method: 'GET'
             })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('网络响应失败: ' + response.status);
+                    }
+                    return response.text(); // 直接获取纯文本
+                })
                 .then(data => {
                     console.log('接口返回数据:', data); // 调试用
-                    if (data && data.data && typeof data.data === 'string' && data.data.trim() !== '') {
-                        quoteList.push(data.data);
+                    if (data && typeof data === 'string' && data.trim() !== '') {
+                        quoteList.push(data.trim());
                         updateMessage();
                     } else {
                         quoteList.push('加载失败，请稍后再试。');
