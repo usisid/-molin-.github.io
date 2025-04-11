@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="A stunning romantic webpage for a competition, featuring a beautiful heart, love quotes, and immersive effects.">
     <meta name="keywords" content="romantic, heart, love quotes, competition, web design">
-    <meta name="author" content="Grok 3">
     <title>丹丹专属</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
@@ -100,17 +99,23 @@
             height: 6px;
             background: var(--secondary-color);
             border-radius: 50%;
-            animation: orbit 6s infinite linear, particleGlow 2s infinite, particleScale 3s infinite;
+            animation: heartOrbit 6s infinite linear, particleGlow 2s infinite, particleScale 3s infinite;
             box-shadow: 0 0 10px rgba(255, 99, 204, 0.5);
         }
 
-        @keyframes orbit {
-            0% {
-                transform: rotate(0deg) translateX(70px) rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg) translateX(70px) rotate(-360deg);
-            }
+        /* 沿着爱心外轮廓的路径 */
+        @keyframes heartOrbit {
+            0% { top: 10%; left: 50%; } /* 顶部中心 */
+            10% { top: 5%; left: 30%; } /* 左上 */
+            20% { top: 20%; left: 10%; } /* 左上角 */
+            30% { top: 40%; left: 5%; } /* 左侧 */
+            40% { top: 60%; left: 20%; } /* 左下 */
+            50% { top: 90%; left: 50%; } /* 底部尖端 */
+            60% { top: 60%; left: 80%; } /* 右下 */
+            70% { top: 40%; left: 95%; } /* 右侧 */
+            80% { top: 20%; left: 90%; } /* 右上角 */
+            90% { top: 5%; left: 70%; } /* 右上 */
+            100% { top: 10%; left: 50%; } /* 回到顶部中心 */
         }
 
         @keyframes particleGlow {
@@ -153,7 +158,7 @@
             white-space: normal;
             word-wrap: break-word;
             z-index: 1;
-            writing-mode: vertical-rl; /* 竖向展示 */
+            writing-mode: vertical-rl;
             animation: slideVertical 5s infinite linear;
         }
 
@@ -216,12 +221,12 @@
         }
 
         .nebula-1 {
-            background: radial-gradient(circle at 30% 70%, rgba(255, 99, 204, 0.1), transparent 50%);
+            background: radial-gradient(circle at 30% 70%, rgba(255, 99, 204, 0.15), transparent 50%);
             opacity: 0.3;
         }
 
         .nebula-2 {
-            background: radial-gradient(circle at 70% 30%, rgba(147, 112, 219, 0.1), transparent 50%);
+            background: radial-gradient(circle at 70% 30%, rgba(147, 112, 219, 0.15), transparent 50%);
             opacity: 0.2;
             animation-delay: 5s;
         }
